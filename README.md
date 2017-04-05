@@ -1,4 +1,10 @@
 ## 基于朴素贝叶斯的新闻分类器
+### 运行环境
+- python3.5
+
+### 依赖
+- [jieba](https://github.com/fxsjy/jieba)
+- [sklearn](http://scikit-learn.org/)
 
 ### 新闻数据获取
 数据源: [搜狗实验室](http://www.sogou.com/labs/resource/cs.php)
