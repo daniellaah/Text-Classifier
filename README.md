@@ -38,3 +38,6 @@ python model_training_save.py
 ```
 
 ### 模型加载与预测
+```
+python predict.py test.txt
+```
