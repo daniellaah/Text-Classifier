@@ -53,10 +53,3 @@ python predict.py test.txt
 ```
 python NaiveBayes.py
 ```
-
-## HMM
-- 手动实现隐马尔科夫模型进行分词
-
-```
-python hmm.py
-```
