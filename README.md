@@ -32,21 +32,21 @@ cat news_sohusite_xml.dat | iconv -f gbk -t utf-8 -c | grep -E "<content>|<url>"
 python news_data_processing.py
 ```
 
-### News_Classifier_v0
+## News_Classifier_v0
 - 使用jieba作为分词工具
 - 使用sklearn中的朴素贝叶斯模型
 
-#### 模型训练与存储
+### 模型训练与存储
 ```
 python model_training_save.py
 ```
 
-#### 模型加载与预测
+### 模型加载与预测
 ```
 python predict.py test.txt
 ```
 
-### News_Classifier_v1
+## News_Classifier_v1
 - 使用jieba作为分词工具
 - 手动实现朴素贝叶斯模型
 
