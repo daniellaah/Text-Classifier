@@ -53,3 +53,10 @@ python predict.py test.txt
 ```
 python NaiveBayes.py
 ```
+
+## News_Classifier_v2
+- 手动实现隐马尔科夫模型
+
+```
+python hmm.py
+```
