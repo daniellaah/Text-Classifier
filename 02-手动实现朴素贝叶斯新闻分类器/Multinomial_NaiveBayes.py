@@ -63,16 +63,17 @@ def get_probability(news_folder, feature_words):
                         if os.path.isdir(os.path.join(news_folder, subfolder))]
     data_list = [] # element: ([word1, word2, ...], "财经")
     prob_matrix = pd.DataFrame(index=feature_words, columns=news_classes)
+    num_of_all_news = 0
     prob_classes = {}
     for cls in news_classes:
-        prob_classes[cls] = 0.0
-    num_of_all_news = 0
-    prob_count = {}
-    for word in feature_words:
-        prob_count[word] = 1 # 拉普拉斯平滑
+        prob_classes[cls] = 0
+    features_nums = len(feature_words)
     # 遍历每个类别下的新闻
     jieba.enable_parallel(4)
     for news_class in news_classes:
+        prob_count = {}
+        for word in feature_words:
+            prob_count[word] = 1 # 拉普拉斯平滑
         subfolder = os.path.join(news_folder, news_class)
         news_list = [os.path.join(subfolder, news) for news in os.listdir(subfolder) \
                         if os.path.isfile(os.path.join(subfolder, news))]
@@ -82,27 +83,26 @@ def get_probability(news_folder, feature_words):
                 word_list = jieba.lcut(content)
                 for word in prob_count.keys():
                     if word in word_list:
-                        prob_count[word] += 1
+                        prob_count[word] += word_list.count(word)
         news_nums = len(news_list)
         num_of_all_news += news_nums
         prob_classes[news_class] = news_nums
-        features_nums = len(feature_words)
         for word in prob_count.keys():
-            prob_matrix.loc[word, news_class] = prob_count[word]/(news_nums + features_nums)# 拉普拉斯平滑
+            prob_matrix.loc[word, news_class] = prob_count[word]/(news_nums * features_nums + features_nums)# 拉普拉斯平滑
     jieba.disable_parallel()
     for cls in prob_classes.keys():
         prob_classes[cls] = prob_classes[cls] / num_of_all_news
     return prob_matrix, prob_classes
 
 def predict_with_content(prob_matrix, prob_classes, feature_words, content):
-    word_list = set(jieba.lcut(content))
+    word_list = jieba.lcut(content)
     result = {}
     for cls in prob_classes.keys():
         result[cls] = np.log(prob_classes[cls])
     for cls in result.keys():
         for word in feature_words:
             if word in word_list:
-                result[cls] += np.log(prob_matrix.loc[word, cls])
+                result[cls] += np.log(prob_matrix.loc[word, cls] * word_list.count(word))
             else:
                 result[cls] += np.log(1 - prob_matrix.loc[word, cls])
     return max(result, key=result.get)
@@ -131,8 +131,12 @@ def score(news_folder, prob_matrix, prob_classes, feature_words):
 if __name__ == "__main__":
     train_folder = 'train_test_data/train'
     test_folder = 'train_test_data/test'
+    start_time = time.time()
     feature_words = get_feature_words(train_folder)
     prob_matrix, prob_classes = get_probability(train_folder, feature_words)
+    print("训练用时: %ss" % str(time.time()-start_time))
+
+    start_time = time.time()
     acc = score(test_folder, prob_matrix, prob_classes, feature_words)
+    print("测试用时: %ss" % str(time.time()-start_time))
     print("精确度为:%s" % acc)
-    print("测试:%s" % predict_with_file("test.txt"))

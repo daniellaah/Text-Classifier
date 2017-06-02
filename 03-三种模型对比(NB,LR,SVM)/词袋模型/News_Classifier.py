@@ -4,9 +4,9 @@ import random
 import re
 import jieba
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.externals import joblib
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
 
 def words_extract(news_folder):
     """从所有文件内容提取词
@@ -73,9 +73,11 @@ def train_test_extract(train_data, test_data, feature_words):
         test_data: 测试数据
         feature_words: 特征词
     """
-    X_train = [[1 if word in element[0] else 0 for word in feature_words] for element in train_data]
+    # X_train = [[1 if word in element[0] else 0 for word in feature_words] for element in train_data]
+    X_train = [[element[0].count(word) for word in feature_words] for element in train_data]
     y_train = [element[1] for element in train_data]
-    X_test = [[1 if word in element[0] else 0 for word in feature_words] for element in test_data]
+    # X_test = [[1 if word in element[0] else 0 for word in feature_words] for element in test_data]
+    X_test = [[element[0].count(word) for word in feature_words] for element in test_data]
     y_test = [element[1] for element in test_data]
     return X_train, y_train, X_test, y_test
 
@@ -85,12 +87,28 @@ if __name__ == '__main__':
     test_data = words_extract('train_test_data/test')
     feature_words = get_feature_words(train_data, size=1000, stopwords_file="stopwords.txt")
     X_train, y_train, X_test, y_test = train_test_extract(train_data, test_data, feature_words)
-    clf = MultinomialNB().fit(X_train, y_train)
-    test_accuracy = clf.score(X_test, y_test)
-    print("用时%ss" % str(time.time()-start_time))
-    print(test_accuracy)
+    print("数据集构造用时: %ss" % str(time.time()-start_time))
 
-    joblib.dump(clf, 'news_clf_model.pkl')
-    with open("news_clf_feature_words.txt", 'w') as f:
-        for word in feature_words:
-            f.write(word + '\n')
+    print("--------------------------------")
+
+    start_time = time.time()
+    clf_nb = MultinomialNB().fit(X_train, y_train)
+    test_accuracy_nb = clf_nb.score(X_test, y_test)
+    print("NB训练用时: %ss" % str(time.time()-start_time))
+    print("精度为: %s" % str(test_accuracy_nb))
+
+    print("--------------------------------")
+
+    start_time = time.time()
+    clf_lr = LogisticRegression().fit(X_train, y_train)
+    test_accuracy_lr = clf_lr.score(X_test, y_test)
+    print("LR训练用时: %ss" % str(time.time()-start_time))
+    print("精度为: %s" % str(test_accuracy_lr))
+
+    print("--------------------------------")
+
+    start_time = time.time()
+    clf_svm = LinearSVC().fit(X_train, y_train)
+    test_accuracy_svm = clf_svm.score(X_test, y_test)
+    print("SVM训练用时: %ss" % str(time.time()-start_time))
+    print("精度为: %s" % str(test_accuracy_svm))
