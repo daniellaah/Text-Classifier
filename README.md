@@ -33,22 +33,32 @@ python 00-数据预处理/news_data_processing.py
 
 - 伯努利朴素贝叶斯
 ```
-python 01-sklearn朴素贝叶斯新闻分类器/Bernoulli_NaiveBayes.py
+python 01-sklearn朴素贝叶斯新闻分类器/Bernoulli_NaiveBayes.py 01-sklearn朴素贝叶斯新闻分类器
 ```
+![](https://github.com/daniellaah/Text-Classifier/blob/master/01-sklearn%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB%E5%99%A8/screenshot_1138.png)
+
 - 多项式朴素贝叶斯
 ```
-python 01-sklearn朴素贝叶斯新闻分类器/Multinomial_NaiveBayes.py
+python 01-sklearn朴素贝叶斯新闻分类器/Multinomial_NaiveBayes.py 01-sklearn朴素贝叶斯新闻分类器
 ```
+![](https://github.com/daniellaah/Text-Classifier/blob/master/01-sklearn%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB%E5%99%A8/screenshot_1139.png)
+
 ### 02-手动实现朴素贝叶斯新闻分类器
 - 手动实现伯努利朴素贝叶斯
 ```
 python 02-手动实现朴素贝叶斯新闻分类器/Bernoulli_NaiveBayes.py
 ```
+![](https://github.com/daniellaah/Text-Classifier/blob/master/02-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB%E5%99%A8/screenshot_1141.png)
+
 - 手动实现多项式朴素贝叶斯
 ```
 python 02-手动实现朴素贝叶斯新闻分类器/Multinomial_NaiveBayes.py
 ```
+![](https://github.com/daniellaah/Text-Classifier/blob/master/02-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB%E5%99%A8/screenshot_1143.png)
+
 ### 03-三种模型对比(NB,LR,SVM)
 ```
 python 03-三种模型对比(NB,LR,SVM)/词袋模型/News_Classifier.py
 ```
+![](https://github.com/daniellaah/Text-Classifier/blob/master/03-%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%9E%8B%E5%AF%B9%E6%AF%94(NB%2CLR%2CSVM)/screenshot_1142.png)
+
