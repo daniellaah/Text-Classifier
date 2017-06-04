@@ -9,17 +9,17 @@
 - `categories_2012.txt`
 
 说明: 第二个文件包含url与新闻类别的映射关系.  
-例如`<url>http://gongyi.sohu.com/20120706/n347457739.shtml</url>`, 通过查看映射关系:我们知道该新闻属于公益类.
 
 ### 00-数据预处理
 对如下几个类别进行实验:
 
 |  类别  |            URL            |
 | :--: | :-----------------------: |
+|   IT  | http://it.souhu.com/   |
 |  财经  | http://business.sohu.com/ |
 |  体育  |  http://sports.sohu.com/  |
 |  娱乐  |   http://yule.sohu.com/   |
-|   IT   | http://it.souhu.com/   |
+
 
 ```
 cat news_sohusite_xml.dat | iconv -f gbk -t utf-8 -c | grep -E "<content>|<url>" > sohu_news.txt
