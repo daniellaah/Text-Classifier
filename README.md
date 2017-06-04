@@ -49,7 +49,7 @@ python 02-手动实现Bernoulli_NaiveBayes新闻分类器/Bernoulli_NaiveBayes.p
 ```
 ![](https://github.com/daniellaah/Text-Classifier/blob/master/02-手动实现Bernoulli_NaiveBayes新闻分类器/screenshot_1147.png)
 
-### 03-手动实现Bernoulli_NaiveBayes新闻分类器
+### 03-手动实现Multinomial_NaiveBayes新闻分类器
 ```
 python 03-手动实现Multinomial_NaiveBayes新闻分类器/Multinomial_NaiveBayes.py
 ```
