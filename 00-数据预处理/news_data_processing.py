@@ -62,10 +62,10 @@ if __name__ == '__main__':
 
     if not os.path.exists("news_data"):
         os.mkdir("news_data")
-    for cate in category.values():
-        if not os.path.exists(os.path.join("news_data", cate)):
-            os.mkdir(os.path.join("news_data", cate))
-    news_category_extract(category)
+        for cate in category.values():
+            if not os.path.exists(os.path.join("news_data", cate)):
+                os.mkdir(os.path.join("news_data", cate))
+        news_category_extract(category)
 
-    train_test_split(data_size=50, test_split=0.3)
+    train_test_split(data_size=6000, test_split=0.3)
     print("数据处理用时: %s" % str(time.time() - start))
