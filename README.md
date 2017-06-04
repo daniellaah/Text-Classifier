@@ -28,34 +28,34 @@ cat news_sohusite_xml.dat | iconv -f gbk -t utf-8 -c | grep -E "<content>|<url>"
 ```
 python 00-数据预处理/news_data_processing.py
 ```
-### 01-sklearn朴素贝叶斯新闻分类器
+### 01-sklearn Naive Bayes新闻分类器
 #### 依赖: [jieba](https://github.com/fxsjy/jieba), [sklearn](http://scikit-learn.org/)
 
-- 伯努利朴素贝叶斯
+- Bernoulli Naive Bayes
 ```
 python 01-sklearn朴素贝叶斯新闻分类器/Bernoulli_NaiveBayes.py 01-sklearn朴素贝叶斯新闻分类器
 ```
 ![](https://github.com/daniellaah/Text-Classifier/blob/master/01-sklearn%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB%E5%99%A8/screenshot_1138.png)
 
-- 多项式朴素贝叶斯
+-  Multinomial Naive Bayes
 ```
 python 01-sklearn朴素贝叶斯新闻分类器/Multinomial_NaiveBayes.py 01-sklearn朴素贝叶斯新闻分类器
 ```
 ![](https://github.com/daniellaah/Text-Classifier/blob/master/01-sklearn%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%96%B0%E9%97%BB%E5%88%86%E7%B1%BB%E5%99%A8/screenshot_1139.png)
 
-### 02-手动实现Bernoulli_NaiveBayes新闻分类器
+### 02-手动实现Bernoulli Naive Bayes新闻分类器
 ```
 python 02-手动实现Bernoulli_NaiveBayes新闻分类器/Bernoulli_NaiveBayes.py
 ```
 ![](https://github.com/daniellaah/Text-Classifier/blob/master/02-手动实现Bernoulli_NaiveBayes新闻分类器/screenshot_1147.png)
 
-### 03-手动实现Multinomial_NaiveBayes新闻分类器
+### 03-手动实现Multinomial Naive Bayes新闻分类器
 ```
 python 03-手动实现Multinomial_NaiveBayes新闻分类器/Multinomial_NaiveBayes.py
 ```
 ![](https://github.com/daniellaah/Text-Classifier/blob/master/03-手动实现Multinomial_NaiveBayes新闻分类器/screenshot_1148.png)
 
-### 04-手动实现SoftmaxRegression新闻分类器
+### 04-手动实现Softmax Regression新闻分类器
 ```
 python 04-手动实现SoftmaxRegression新闻分类器/SoftmaxRegression.py
 ```
