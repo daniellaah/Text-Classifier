@@ -1,4 +1,4 @@
-## Text Classification: Bernoulli Naive Bayes, Multinomial Naive Bayes and SoftMax Regression 
+## Text Classification: Bernoulli Naive Bayes, Multinomial Naive Bayes and SoftMax Regression
 ### 运行环境
 - python3.5
 
@@ -67,3 +67,8 @@ python 05-sklearn三种模型对比/News_Classifier.py
 ```
 ![](https://github.com/daniellaah/Text-Classifier/blob/master/05-sklearn三种模型对比/screenshot_1146.png)
 
+### 06-06-BGD和SGD对比
+```
+python 06-BGD和SGD对比/SoftmaxRegression.py
+```
+![](https://github.com/daniellaah/Text-Classifier/blob/master/06-BGD和SGD对比/screenshot_1149.png)
