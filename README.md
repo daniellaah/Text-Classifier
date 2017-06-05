@@ -67,7 +67,7 @@ python 05-sklearn三种模型对比/News_Classifier.py
 ```
 ![](https://github.com/daniellaah/Text-Classifier/blob/master/05-sklearn三种模型对比/screenshot_1146.png)
 
-### 06-06-BGD和SGD对比
+### 06-BGD和SGD对比
 ```
 python 06-BGD和SGD对比/SoftmaxRegression.py
 ```
