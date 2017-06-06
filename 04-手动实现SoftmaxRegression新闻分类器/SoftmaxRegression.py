@@ -43,7 +43,7 @@ class SoftmaxRegression():
         X = np.column_stack((np.ones(sample_nums), X))
         self.weight = np.zeros((self.k, feature_nums), dtype=float)
         for i in range(iter_nums):
-            self.weight += (alpha * np.dot((Y - self.softmax(X)), X) - reg * self.weight)
+            self.weight += (alpha * np.dot((Y - self.softmax(X)), X) / sample_nums - reg * self.weight)
         return self
 
     def score(self, X, y_true):
@@ -154,8 +154,8 @@ def train_test_extract(train_data, test_data, feature_words):
 
 if __name__ == '__main__':
     start_time = time.time()
-    train_data = words_extract('train_test_data/train')
-    test_data = words_extract('train_test_data/test')
+    train_data = words_extract('train_test_data_1000/train')
+    test_data = words_extract('train_test_data_1000/test')
     feature_words = get_feature_words(train_data, size=1000, stopwords_file="stopwords.txt")
     X_train, y_train, X_test, y_test = train_test_extract(train_data, test_data, feature_words)
     print("数据集构造用时%ss." % str(time.time()-start_time))
