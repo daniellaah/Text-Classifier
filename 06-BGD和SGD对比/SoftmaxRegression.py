@@ -172,7 +172,7 @@ if __name__ == '__main__':
     print('-------------------Batch Gradient Descent--------------------')
 
     start_time = time.time()
-    clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_BGD(X_train, y_train, alpha=0.001, reg=0.01, max_iter=1000, epsilon=1e-10)
+    clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_BGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=2000, epsilon=0.0)
     test_accuracy = clf_BGD.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     print('-------------------Stochasitc Gradient Descent----------------------')
 
     start_time = time.time()
-    clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.0001, reg=0.01, max_iter=3, epsilon=1e-10)
+    clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=5, epsilon=1e-10)
     test_accuracy = clf_SGD.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
