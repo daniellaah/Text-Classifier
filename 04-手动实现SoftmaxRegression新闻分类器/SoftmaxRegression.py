@@ -154,15 +154,15 @@ def train_test_extract(train_data, test_data, feature_words):
 
 if __name__ == '__main__':
     start_time = time.time()
-    train_data = words_extract('train_test_data_1000/train')
-    test_data = words_extract('train_test_data_1000/test')
+    train_data = words_extract('train_test_data/train')
+    test_data = words_extract('train_test_data/test')
     feature_words = get_feature_words(train_data, size=1000, stopwords_file="stopwords.txt")
     X_train, y_train, X_test, y_test = train_test_extract(train_data, test_data, feature_words)
     print("数据集构造用时%ss." % str(time.time()-start_time))
 
     class_list = ['IT', '娱乐', '财经', '体育']
     start_time = time.time()
-    clf = SoftmaxRegression(len(class_list), class_list).fit(X_train, y_train, alpha=0.001, reg=0.0, iter_nums=1000)
+    clf = SoftmaxRegression(len(class_list), class_list).fit(X_train, y_train, alpha=0.01, reg=0.0, iter_nums=1000)
     test_accuracy = clf.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))

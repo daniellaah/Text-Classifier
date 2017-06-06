@@ -45,12 +45,9 @@ class SoftmaxRegression():
             Y[self.label_to_int[label], i] = 1
         X = np.column_stack((np.ones(sample_nums), X))
         self.weight = np.zeros((self.k, feature_nums), dtype=float)
-        # count = max_iter / 10
         loss = self.loss_func(X, Y, reg)
         for i in range(max_iter):
-            # if i % count == 0:
-            #     print('loss: %s' % str(self.loss_func(X, Y, reg)))
-            batch_gradient = np.dot((Y - self.softmax(X)), X)
+            batch_gradient = np.dot((Y - self.softmax(X)), X)  / sample_nums
             self.weight += (alpha * batch_gradient - reg * self.weight)
             if loss - self.loss_func(X, Y, reg) <= epsilon:
                 print('iter nums: %s' % str(i + 1))
@@ -73,11 +70,9 @@ class SoftmaxRegression():
         loss = self.loss_func(X, Y, reg)
         for i in range(max_iter):
             for j in range(sample_nums):
-                # if (i * sample_nums + j) % count == 0:
-                #     print('loss: %s' % str(self.loss_func(X, Y, reg)))
                 rand = np.random.randint(sample_nums)
                 stochasitc_gradient = np.dot((Y[:, rand] - self.softmax(X[rand, :])).reshape(self.k, 1),
-                                                X[rand, :].reshape(1, feature_nums))
+                                                X[rand, :].reshape(1, feature_nums))  / sample_nums
                 self.weight += (alpha * stochasitc_gradient - reg * self.weight)
                 # SGD 不能用一下方法判断是否收敛
                 # if loss - self.loss_func(X, Y, reg)<= epsilon:
@@ -177,7 +172,7 @@ if __name__ == '__main__':
     print('-------------------Batch Gradient Descent--------------------')
 
     start_time = time.time()
-    clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_BGD(X_train, y_train, alpha=0.0001, reg=0.01, max_iter=1000, epsilon=1e-10)
+    clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_BGD(X_train, y_train, alpha=0.001, reg=0.01, max_iter=1000, epsilon=1e-10)
     test_accuracy = clf_BGD.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
