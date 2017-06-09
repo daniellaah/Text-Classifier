@@ -5,6 +5,7 @@ import random
 import re
 import jieba
 import numpy as np
+import pandas as pd
 from sklearn.metrics import accuracy_score
 
 class SoftmaxRegression():
@@ -45,17 +46,17 @@ class SoftmaxRegression():
             Y[self.label_to_int[label], i] = 1
         X = np.column_stack((np.ones(sample_nums), X))
         self.weight = np.zeros((self.k, feature_nums), dtype=float)
-        loss = self.loss_func(X, Y, reg)
+        # loss = self.loss_func(X, Y, reg)
         for i in range(max_iter):
             batch_gradient = np.dot((Y - self.softmax(X)), X)  / sample_nums
             self.weight += (alpha * batch_gradient - reg * self.weight)
-            if loss - self.loss_func(X, Y, reg) <= epsilon:
-                print('iter nums: %s' % str(i + 1))
-                print('loss: %s' % str(self.loss_func(X, Y, reg)))
-                return self
-            loss = self.loss_func(X, Y, reg)
+            # if loss - self.loss_func(X, Y, reg) <= epsilon:
+            #     print('iter nums: %s' % str(i + 1))
+            #     print('loss: %s' % str(self.loss_func(X, Y, reg)))
+            #     return self
+            # loss = self.loss_func(X, Y, reg)
         print('iter nums: %s' % str(i + 1))
-        print('loss: %s' % str(loss))
+        print('loss: %s' % str(self.loss_func(X, Y, reg)))
         return self
 
     def fit_SGD(self, X, y, alpha=0.01, reg=0.1, max_iter=1000):
@@ -154,16 +155,41 @@ def train_test_extract(train_data, test_data, feature_words):
     return X_train, y_train, X_test, y_test
 
 if __name__ == '__main__':
-    start_time = time.time()
-    train_data = words_extract('train_test_data/train')
-    test_data = words_extract('train_test_data/test')
-    feature_words = get_feature_words(train_data, size=1000, stopwords_file="stopwords.txt")
-    X_train, y_train, X_test, y_test = train_test_extract(train_data, test_data, feature_words)
-    print("数据集构造用时%ss." % str(time.time()-start_time))
+    if not (os.path.exists("X_train.csv") and
+        os.path.exists("y_train.csv") and
+        os.path.exists("X_test.csv") and
+        os.path.exists("y_test.csv")):
+        start_time = time.time()
+        train_data = words_extract('train_test_data/train')
+        test_data = words_extract('train_test_data/test')
+        feature_words = get_feature_words(train_data, size=1000, stopwords_file="stopwords.txt")
+        X_train, y_train, X_test, y_test = train_test_extract(train_data, test_data, feature_words)
+        print("数据集构造用时%ss." % str(time.time()-start_time))
+        np.savetxt("X_train.csv", X_train, fmt='%i')
+        np.savetxt("X_test.csv", X_test, fmt='%s')
+
+        with open("y_train.csv", 'w') as f_obj:
+            for label in y_train:
+                f_obj.write(label + '\n')
+
+        with open("y_test.csv", 'w') as f_obj:
+            for label in y_test:
+                f_obj.write(label + '\n')
+    else:
+        print("数据集已经存在, 直接读取...")
+        X_train = np.genfromtxt("X_train.csv")
+        X_test = np.genfromtxt("X_test.csv")
+        y_train, y_test = [], []
+
+        with open("y_train.csv", 'r') as f_obj:
+            y_train = f_obj.read().strip().split('\n')
+
+        with open("y_test.csv", 'r') as f_obj:
+            y_test = f_obj.read().strip().split('\n')
 
     class_list = ['IT', '娱乐', '财经', '体育']
 
-    print('-------------------Batch Gradient Descent--------------------')
+    print('-------------------Batch Gradient Descent---------------------------')
 
     start_time = time.time()
     clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_BGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=2000, epsilon=0.0)
@@ -174,7 +200,7 @@ if __name__ == '__main__':
     print('-------------------Stochasitc Gradient Descent----------------------')
 
     start_time = time.time()
-    clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=5)
+    clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=20)
     test_accuracy = clf_SGD.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
