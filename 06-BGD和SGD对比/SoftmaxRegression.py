@@ -177,6 +177,7 @@ if __name__ == '__main__':
                 f_obj.write(label + '\n')
     else:
         print("数据集已经存在, 直接读取...")
+        start_time = time.time()
         X_train = np.genfromtxt("X_train.csv")
         X_test = np.genfromtxt("X_test.csv")
         y_train, y_test = [], []
@@ -187,10 +188,11 @@ if __name__ == '__main__':
         with open("y_test.csv", 'r') as f_obj:
             y_test = f_obj.read().strip().split('\n')
 
+        print("读取用时%ss." % str(time.time()-start_time))
+
     class_list = ['IT', '娱乐', '财经', '体育']
 
     print('-------------------Batch Gradient Descent---------------------------')
-
     start_time = time.time()
     clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_BGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=2000, epsilon=0.0)
     test_accuracy = clf_BGD.score(X_test, y_test)
@@ -198,9 +200,21 @@ if __name__ == '__main__':
     print("精度为%s" % str(test_accuracy))
 
     print('-------------------Stochasitc Gradient Descent----------------------')
-
     start_time = time.time()
-    clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=20)
-    test_accuracy = clf_SGD.score(X_test, y_test)
+    clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.01, reg=0.001, max_iter=3)
+    test_accuracy = clf_BGD.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
+
+
+    # GridSearch
+    # alpha_list = [0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
+    # reg_list = [0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
+    # for alpha in alpha_list:
+    #     for reg in reg_list:
+    #         start_time = time.time()
+    #         clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=alpha, reg=reg, max_iter=20)
+    #         test_accuracy = clf_SGD.score(X_test, y_test)
+    #         print("训练用时%ss" % (str(time.time()-start_time)))
+    #         print("alpha=%s, lambda=%s, 精度为%s" % (str(alpha), str(reg), str(test_accuracy)))
+    #         print('---------------------------------------------------')
