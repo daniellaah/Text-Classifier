@@ -72,7 +72,7 @@ class SoftmaxRegression():
             for j in range(sample_nums):
                 rand = np.random.randint(sample_nums)
                 stochasitc_gradient = np.dot((Y[:, rand] - self.softmax(X[rand, :])).reshape(self.k, 1),
-                                                X[rand, :].reshape(1, feature_nums))  / sample_nums
+                                                X[rand, :].reshape(1, feature_nums))
                 self.weight += (alpha * stochasitc_gradient - reg * self.weight)
                 # SGD 不能用一下方法判断是否收敛
                 # if loss - self.loss_func(X, Y, reg)<= epsilon:
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     print('-------------------Stochasitc Gradient Descent----------------------')
 
     start_time = time.time()
-    clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=5, epsilon=1e-10)
+    clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=10, epsilon=1e-10)
     test_accuracy = clf_SGD.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
