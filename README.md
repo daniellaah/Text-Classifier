@@ -1,4 +1,8 @@
-## Text Classification: Bernoulli Naive Bayes, Multinomial Naive Bayes and SoftMax Regression
+## Text Classification
+- Bernoulli Naive Bayes
+- Multinomial Naive Bayes
+- SoftMax Regression
+
 ### 运行环境
 - python3.5
 
