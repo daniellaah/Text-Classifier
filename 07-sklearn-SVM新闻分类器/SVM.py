@@ -124,6 +124,8 @@ if __name__ == '__main__':
     test_accuracy = clf.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
+
+    # GridSearch
     # c_list = [0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
     # for c in c_list:
     #     start_time = time.time()
@@ -135,15 +137,16 @@ if __name__ == '__main__':
 
     print('-------------------RBF SVM---------------------------')
     start_time = time.time()
-    clf = SVC(C=0.03, kernel='rbf').fit(X_train, y_train)
+    clf = SVC(C=1.0, kernel='rbf').fit(X_train, y_train)
     test_accuracy = clf.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
 
-    # c_list = [0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
+    # # GridSearch
+    # c_list = [1.0, 0.3, 0.1, 0.03, 0.01]
     # for c in c_list:
     #     start_time = time.time()
-    #     clf = SVC(C=c, kernel='linear').fit(X_train, y_train)
+    #     clf = SVC(C=c, kernel='rbf').fit(X_train, y_train)
     #     test_accuracy = clf.score(X_test, y_test)
     #     print("训练用时%ss" % (str(time.time()-start_time)))
     #     print("c=%s, 精度为%s" % (str(c), str(test_accuracy)))
