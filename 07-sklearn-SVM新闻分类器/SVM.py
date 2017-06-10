@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
     print('-------------------Linear SVM---------------------------')
     start_time = time.time()
-    clf = SVC(C='0.03', kernel='linear').fit(X_train, y_train)
+    clf = SVC(C=0.03, kernel='linear').fit(X_train, y_train)
     test_accuracy = clf.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
@@ -135,7 +135,7 @@ if __name__ == '__main__':
 
     print('-------------------RBF SVM---------------------------')
     start_time = time.time()
-    clf = SVC(C='0.03', kernel='rbf').fit(X_train, y_train)
+    clf = SVC(C=0.03, kernel='rbf').fit(X_train, y_train)
     test_accuracy = clf.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
