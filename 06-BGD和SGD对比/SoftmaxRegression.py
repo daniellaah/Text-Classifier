@@ -79,6 +79,24 @@ class SoftmaxRegression():
         print('loss: %s' % str(self.loss_func(X, Y, reg)))
         return self
 
+    def fit_Newton(self, X, y, reg=0.01, max_iter=10):
+        X = np.array(X)
+        sample_nums, feature_nums = X.shape[0], X.shape[1] + 1
+        Y = np.zeros((self.k, sample_nums))
+        for i, label in enumerate(y):
+            Y[self.label_to_int[label], i] = 1
+        X = np.column_stack((np.ones(sample_nums), X))
+        self.weight = np.zeros((self.k, feature_nums), dtype=float)
+        for i in range(max_iter):
+            matrix = np.exp(np.dot(self.weight, X.T))
+            sum_matrix = np.sum(matrix, axis=0)
+            gradient = -np.dot((Y - self.softmax(X)), X)  / sample_nums
+            for j in range(self.k):
+                hessian = np.dot(X.T, np.dot((sum_matrix - matrix[j]) / (sum_matrix * sum_matrix), matrix[j]) * X)
+                self.weight[j] -= np.dot(np.linalg.inv(hessian), gradient[j])
+        print('iter nums: %s' % str(i + 1))
+        print('loss: %s' % str(self.loss_func(X, Y, reg)))
+        return self
 
     def score(self, X, y_true):
         return accuracy_score(y_true, self.predict(X))
@@ -199,14 +217,21 @@ if __name__ == '__main__':
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
 
-    print('-------------------Stochasitc Gradient Descent----------------------')
+    print('-----------------Stochasitc Gradient Descent------------------------')
     start_time = time.time()
     clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.01, reg=0.001, max_iter=3)
     test_accuracy = clf_BGD.score(X_test, y_test)
     print("训练用时%ss" % (str(time.time()-start_time)))
     print("精度为%s" % str(test_accuracy))
 
+    print('------------------------Newton Method-------------------------------')
+    start_time = time.time()
+    clf_Newton = SoftmaxRegression(len(class_list), class_list).fit_Newton(X_train, y_train, reg=0.0, max_iter=1)
+    test_accuracy = clf_Newton.score(X_test, y_test)
+    print("训练用时%ss" % (str(time.time()-start_time)))
+    print("精度为%s" % str(test_accuracy))
 
+    
     # GridSearch
     # alpha_list = [0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
     # reg_list = [0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
