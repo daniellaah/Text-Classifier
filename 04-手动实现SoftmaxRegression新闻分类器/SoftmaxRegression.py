@@ -7,9 +7,6 @@ import jieba
 import numpy as np
 from sklearn.metrics import accuracy_score
 
-def sigmoid(z):
-       return 1.0 / (1 + np.exp(-z))
-
 class SoftmaxRegression():
     def __init__(self, k, class_list):
         self.weight = np.array([], dtype=float) # k * n + 1
@@ -24,16 +21,6 @@ class SoftmaxRegression():
         matrix = np.exp(np.dot(self.weight, X.T))
         return matrix / np.sum(matrix, axis=0)
 
-    def predict(self, X):
-        X = np.array(X)
-        sample_nums = X.shape[0]
-        X = np.column_stack((np.ones(sample_nums), X))
-        int_result = np.argmax(self.softmax(X), axis=0)
-        label_result = []
-        for i in range(len(int_result)):
-            label_result.append(self.int_to_label[int_result[i]])
-        return label_result
-
     def fit(self, X, y, alpha=0.01, reg=0.3, iter_nums=1000):
         X = np.array(X)
         sample_nums, feature_nums = X.shape[0], X.shape[1] + 1
@@ -46,40 +33,18 @@ class SoftmaxRegression():
             self.weight += (alpha * np.dot((Y - self.softmax(X)), X) / sample_nums - reg * self.weight)
         return self
 
-    def score(self, X, y_true):
-        return accuracy_score(y_true, self.predict(X))
-
-class LogisticRegression():
-    def __init__(self):
-        self.weight = np.array([], dtype=float)
-
-    def fit(self, X, y, alpha=0.01, iter_nums=1000):
-        X = np.array(X)
-        sample_nums, feature_nums = X.shape[0], X.shape[1] + 1
-        y = np.array(y).reshape(sample_nums, 1)
-        X = np.column_stack((np.ones(sample_nums), X))
-        init_weight = np.zeros(feature_nums, dtype=float).reshape(feature_nums, 1)
-        for i in range(iter_nums):
-            h = sigmoid(np.dot(X, init_weight))
-            init_weight += alpha * np.dot(X.T, (y - h))
-        self.weight = init_weight
-        return self
-
     def predict(self, X):
         X = np.array(X)
         sample_nums = X.shape[0]
         X = np.column_stack((np.ones(sample_nums), X))
-        result = []
-        for sample in X:
-            if sigmoid(np.dot(sample, self.weight)) >= 0.5:
-                result.append(1)
-            else:
-                result.append(0)
-        return result
+        int_result = np.argmax(self.softmax(X), axis=0)
+        label_result = []
+        for i in range(len(int_result)):
+            label_result.append(self.int_to_label[int_result[i]])
+        return label_result
 
     def score(self, X, y_true):
-        y_predict = self.predict(X)
-        return accuracy_score(y_predict, y_true)
+        return accuracy_score(y_true, self.predict(X))
 
 def words_extract(news_folder):
     """从所有文件内容提取词
