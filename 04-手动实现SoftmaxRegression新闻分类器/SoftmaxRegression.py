@@ -118,14 +118,43 @@ def train_test_extract(train_data, test_data, feature_words):
     return X_train, y_train, X_test, y_test
 
 if __name__ == '__main__':
-    start_time = time.time()
-    train_data = words_extract('train_test_data/train')
-    test_data = words_extract('train_test_data/test')
-    feature_words = get_feature_words(train_data, size=1000, stopwords_file="stopwords.txt")
-    X_train, y_train, X_test, y_test = train_test_extract(train_data, test_data, feature_words)
-    print("数据集构造用时%ss." % str(time.time()-start_time))
+    if not (os.path.exists("X_train.csv") and
+        os.path.exists("y_train.csv") and
+        os.path.exists("X_test.csv") and
+        os.path.exists("y_test.csv")):
+        start_time = time.time()
+        train_data = words_extract('train_test_data/train')
+        test_data = words_extract('train_test_data/test')
+        feature_words = get_feature_words(train_data, size=1000, stopwords_file="stopwords.txt")
+        X_train, y_train, X_test, y_test = train_test_extract(train_data, test_data, feature_words)
+        print("数据集构造用时%ss." % str(time.time()-start_time))
+        np.savetxt("X_train.csv", X_train, fmt='%i')
+        np.savetxt("X_test.csv", X_test, fmt='%s')
 
+        with open("y_train.csv", 'w') as f_obj:
+            for label in y_train:
+                f_obj.write(label + '\n')
+
+        with open("y_test.csv", 'w') as f_obj:
+            for label in y_test:
+                f_obj.write(label + '\n')
+    else:
+        print("数据集已经存在, 直接读取...")
+        start_time = time.time()
+        X_train = np.genfromtxt("X_train.csv")
+        X_test = np.genfromtxt("X_test.csv")
+        y_train, y_test = [], []
+
+        with open("y_train.csv", 'r') as f_obj:
+            y_train = f_obj.read().strip().split('\n')
+
+        with open("y_test.csv", 'r') as f_obj:
+            y_test = f_obj.read().strip().split('\n')
+
+        print("读取用时%ss." % str(time.time()-start_time))
+        
     class_list = ['IT', '娱乐', '财经', '体育']
+
     start_time = time.time()
     clf = SoftmaxRegression(len(class_list), class_list).fit(X_train, y_train, alpha=0.01, reg=0.0, iter_nums=1000)
     test_accuracy = clf.score(X_test, y_test)
