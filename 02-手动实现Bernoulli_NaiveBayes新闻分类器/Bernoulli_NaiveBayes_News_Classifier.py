@@ -6,7 +6,7 @@ import jieba
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
-
+import code
 def get_feature_words(news_folder, size=1000, stopwords_file="stopwords.txt"):
     """从所有文件内容提取特征词
     Args:
@@ -52,7 +52,7 @@ def get_stopwords(stopwords_file="stopwords.txt"):
     return stopwords_set
 
 def get_probability(news_folder, feature_words):
-    """从所有文件内容提取词
+    """计算概率, prob_matrix, prob_classes
     Args:
         news_folder/
             财经/
@@ -128,13 +128,13 @@ def score(news_folder, prob_matrix, prob_classes, feature_words):
     return accuracy_score(y_true, y_predict)
 
 if __name__ == "__main__":
-    train_folder = 'train_test_data/train'
-    test_folder = 'train_test_data/test'
+    train_folder = 'train_test_data_1000/train'
+    test_folder = 'train_test_data_1000/test'
     start_time = time.time()
     feature_words = get_feature_words(train_folder)
     prob_matrix, prob_classes = get_probability(train_folder, feature_words)
     print("训练用时: %ss" % str(time.time()-start_time))
-
+    code.interact(local=locals())
     start_time = time.time()
     acc = score(test_folder, prob_matrix, prob_classes, feature_words)
     print("测试用时: %ss" % str(time.time()-start_time))
