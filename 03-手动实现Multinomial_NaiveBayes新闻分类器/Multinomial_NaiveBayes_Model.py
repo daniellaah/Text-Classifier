@@ -13,7 +13,7 @@ from sklearn.metrics import accuracy_score
 import warnings
 warnings.filterwarnings('ignore')
 
-class BernoulliNaiveBayes():
+class MultinomialNaiveBayes():
     def __init__(self, classes):
         '''初始化
         Args:
@@ -188,7 +188,7 @@ if __name__ == '__main__':
 
     print('-------------------Multinomial NaiveBayes---------------------------')
     start_time = time.time()
-    clf = BernoulliNaiveBayes(class_list).fit(X_train, y_train, alpha=1)
+    clf = MultinomialNaiveBayes(class_list).fit(X_train, y_train, alpha=1)
     print("训练用时: %ss" % (str(time.time()-start_time)))
 
     start_time = time.time()
