@@ -21,18 +21,6 @@ class SoftmaxRegression():
         matrix = np.exp(np.dot(self.weight, X.T))
         return matrix / np.sum(matrix, axis=0)
 
-    def fit(self, X, y, alpha=0.01, reg=0.3, iter_nums=1000):
-        X = np.array(X)
-        sample_nums, feature_nums = X.shape[0], X.shape[1] + 1
-        Y = np.zeros((self.k, sample_nums))
-        for i, label in enumerate(y):
-            Y[self.label_to_int[label], i] = 1
-        X = np.column_stack((np.ones(sample_nums), X))
-        self.weight = np.zeros((self.k, feature_nums), dtype=float)
-        for i in range(iter_nums):
-            self.weight += (alpha * np.dot((Y - self.softmax(X)), X) / sample_nums - reg * self.weight)
-        return self
-
     def predict(self, X):
         X = np.array(X)
         sample_nums = X.shape[0]
@@ -42,6 +30,33 @@ class SoftmaxRegression():
         for i in range(len(int_result)):
             label_result.append(self.int_to_label[int_result[i]])
         return label_result
+
+    def loss_func(self, X, Y, reg):
+        sample_nums, feature_nums = X.shape[0], X.shape[1]
+        loss = -np.sum(Y * np.log(self.softmax(X)))/sample_nums
+        regularization = np.sum(self.weight * self.weight) * reg / 2
+        return loss +  regularization
+
+    def fit_BGD(self, X, y, alpha=0.01, reg=0.1, max_iter=1000, epsilon=1e-10):
+        X = np.array(X)
+        sample_nums, feature_nums = X.shape[0], X.shape[1] + 1
+        Y = np.zeros((self.k, sample_nums))
+        for i, label in enumerate(y):
+            Y[self.label_to_int[label], i] = 1
+        X = np.column_stack((np.ones(sample_nums), X))
+        self.weight = np.zeros((self.k, feature_nums), dtype=float)
+        # loss = self.loss_func(X, Y, reg)
+        for i in range(max_iter):
+            batch_gradient = np.dot((Y - self.softmax(X)), X)  / sample_nums
+            self.weight += (alpha * batch_gradient - reg * self.weight)
+            # if loss - self.loss_func(X, Y, reg) <= epsilon:
+            #     print('iter nums: %s' % str(i + 1))
+            #     print('loss: %s' % str(self.loss_func(X, Y, reg)))
+            #     return self
+            # loss = self.loss_func(X, Y, reg)
+        print('iter nums: %s' % str(i + 1))
+        print('loss: %s' % str(self.loss_func(X, Y, reg)))
+        return self
 
     def score(self, X, y_true):
         return accuracy_score(y_true, self.predict(X))
@@ -151,12 +166,15 @@ if __name__ == '__main__':
         with open("y_test.csv", 'r') as f_obj:
             y_test = f_obj.read().strip().split('\n')
 
-        print("读取用时%ss." % str(time.time()-start_time))
-        
+        print("读取用时: %ss" % str(time.time()-start_time))
+
     class_list = ['IT', '娱乐', '财经', '体育']
 
     start_time = time.time()
-    clf = SoftmaxRegression(len(class_list), class_list).fit(X_train, y_train, alpha=0.01, reg=0.0, iter_nums=1000)
-    test_accuracy = clf.score(X_test, y_test)
-    print("训练用时%ss" % (str(time.time()-start_time)))
-    print("精度为%s" % str(test_accuracy))
+    clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_BGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=2000, epsilon=0.0)
+    print("训练用时: %ss" % (str(time.time()-start_time)))
+    
+    start_time = time.time()
+    test_accuracy = clf_BGD.score(X_test, y_test)
+    print("测试用时: %ss" % (str(time.time()-start_time)))
+    print("准确率为: %s" % str(test_accuracy))

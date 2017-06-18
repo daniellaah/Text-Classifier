@@ -46,17 +46,9 @@ class SoftmaxRegression():
             Y[self.label_to_int[label], i] = 1
         X = np.column_stack((np.ones(sample_nums), X))
         self.weight = np.zeros((self.k, feature_nums), dtype=float)
-        # loss = self.loss_func(X, Y, reg)
         for i in range(max_iter):
             batch_gradient = np.dot((Y - self.softmax(X)), X)  / sample_nums
             self.weight += (alpha * batch_gradient - reg * self.weight)
-            # if loss - self.loss_func(X, Y, reg) <= epsilon:
-            #     print('iter nums: %s' % str(i + 1))
-            #     print('loss: %s' % str(self.loss_func(X, Y, reg)))
-            #     return self
-            # loss = self.loss_func(X, Y, reg)
-        print('iter nums: %s' % str(i + 1))
-        print('loss: %s' % str(self.loss_func(X, Y, reg)))
         return self
 
     def fit_SGD(self, X, y, alpha=0.01, reg=0.1, max_iter=1000):
@@ -206,32 +198,38 @@ if __name__ == '__main__':
         with open("y_test.csv", 'r') as f_obj:
             y_test = f_obj.read().strip().split('\n')
 
-        print("读取用时%ss." % str(time.time()-start_time))
+        print("读取用时: %ss" % str(time.time()-start_time))
 
     class_list = ['IT', '娱乐', '财经', '体育']
 
     print('-------------------Batch Gradient Descent---------------------------')
     start_time = time.time()
     clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_BGD(X_train, y_train, alpha=0.1, reg=0.01, max_iter=2000, epsilon=0.0)
+    print("训练用时: %ss" % (str(time.time()-start_time)))
+    start_time = time.time()
     test_accuracy = clf_BGD.score(X_test, y_test)
-    print("训练用时%ss" % (str(time.time()-start_time)))
-    print("精度为%s" % str(test_accuracy))
+    print("测试用时: %ss" % (str(time.time()-start_time)))
+    print("准确率为: %s" % str(test_accuracy))
 
     print('-----------------Stochasitc Gradient Descent------------------------')
     start_time = time.time()
-    clf_BGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.01, reg=0.001, max_iter=3)
-    test_accuracy = clf_BGD.score(X_test, y_test)
-    print("训练用时%ss" % (str(time.time()-start_time)))
-    print("精度为%s" % str(test_accuracy))
+    clf_SGD = SoftmaxRegression(len(class_list), class_list).fit_SGD(X_train, y_train, alpha=0.01, reg=0.001, max_iter=3)
+    print("训练用时: %ss" % (str(time.time()-start_time)))
+    start_time = time.time()
+    test_accuracy = clf_SGD.score(X_test, y_test)
+    print("测试用时: %ss" % (str(time.time()-start_time)))
+    print("准确率为: %s" % str(test_accuracy))
 
     print('------------------------Newton Method-------------------------------')
     start_time = time.time()
     clf_Newton = SoftmaxRegression(len(class_list), class_list).fit_Newton(X_train, y_train, reg=0.0, max_iter=1)
+    print("训练用时: %ss" % (str(time.time()-start_time)))
+    start_time = time.time()
     test_accuracy = clf_Newton.score(X_test, y_test)
-    print("训练用时%ss" % (str(time.time()-start_time)))
-    print("精度为%s" % str(test_accuracy))
+    print("测试用时: %ss" % (str(time.time()-start_time)))
+    print("准确率为: %s" % str(test_accuracy))
 
-    
+
     # GridSearch
     # alpha_list = [0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
     # reg_list = [0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
