@@ -52,10 +52,8 @@ class BernoulliNaiveBayes():
         '''
         result = {}
         for k in self.classes:
-            log_post_prob = sum([np.log(self.prob_matrix[k][i]) * sample[i]
-                                    if sample[i] > 0 else
-                                np.log(1 - self.prob_matrix[k][i])
-                                for i in range(len(sample))])
+            log_post_prob = np.sum(np.log(self.prob_matrix[k][sample > 0]) * sample[sample > 0]) + \
+                            np.sum(np.log(1 - self.prob_matrix[k][sample == 0]))
             log_prior_prob = np.log(self.prob_classes[k])
             result[k] = log_post_prob + log_prior_prob
         return max(result, key=result.get)
