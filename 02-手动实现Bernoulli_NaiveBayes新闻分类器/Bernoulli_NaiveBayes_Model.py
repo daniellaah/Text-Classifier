@@ -44,7 +44,7 @@ class BernoulliNaiveBayes():
             self.prob_matrix[k] = (np.sum(X[y == k, :], axis=0) + alpha) / (sample_nums_k + 2 * alpha)
         return self
 
-    def _predict_one_sample(self, sample):
+    def _predict(self, sample):
         '''对单个样本预测, 将概率连乘改为log概率连加, 防止浮点数下溢
         Args:
             sample: e.g. [1, 0, 0, 1 ...] feature_nums * 1
@@ -63,9 +63,9 @@ class BernoulliNaiveBayes():
             X: 所有样本或者单个样本
         '''
         if X.ndim == 1:
-            return self._predict_one_sample(X)
+            return self._predict(X)
         else:
-            return np.apply_along_axis(self._predict_one_sample, 1, X)
+            return np.apply_along_axis(self._predict, 1, X)
 
     def score(self, X, y_true):
         '''给定测试样本, 进行评估
