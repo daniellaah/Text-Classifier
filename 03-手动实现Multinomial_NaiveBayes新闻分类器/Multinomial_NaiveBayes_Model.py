@@ -186,7 +186,7 @@ if __name__ == '__main__':
 
     class_list = ['IT', '娱乐', '财经', '体育']
 
-    print('-------------------Bernoulli NaiveBayes---------------------------')
+    print('-------------------Multinomial NaiveBayes---------------------------')
     start_time = time.time()
     clf = BernoulliNaiveBayes(class_list).fit(X_train, y_train, alpha=1)
     print("训练用时: %ss" % (str(time.time()-start_time)))
