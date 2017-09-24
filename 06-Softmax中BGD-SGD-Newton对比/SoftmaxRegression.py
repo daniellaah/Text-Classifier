@@ -12,11 +12,11 @@ class SoftmaxRegression():
     def __init__(self, k, class_list):
         self.weight = np.array([], dtype=float) # k * n + 1
         self.k = k
-        self.int_to_label = {}
-        self.label_to_int = {}
+        self.index_to_label = {}
+        self.label_to_index = {}
         for i, label in enumerate(class_list):
-            self.int_to_label[i] = label
-            self.label_to_int[label] = i
+            self.index_to_label[i] = label
+            self.label_to_index[label] = i
 
     def softmax(self, X):
         matrix = np.exp(np.dot(self.weight, X.T))
@@ -26,11 +26,8 @@ class SoftmaxRegression():
         X = np.array(X)
         sample_nums = X.shape[0]
         X = np.column_stack((np.ones(sample_nums), X))
-        int_result = np.argmax(self.softmax(X), axis=0)
-        label_result = []
-        for i in range(len(int_result)):
-            label_result.append(self.int_to_label[int_result[i]])
-        return label_result
+        index_result = np.argmax(self.softmax(X), axis=0)
+        return [self.index_to_label[index] for index in index_result]
 
     def loss_func(self, X, Y, reg):
         sample_nums, feature_nums = X.shape[0], X.shape[1]
@@ -43,12 +40,14 @@ class SoftmaxRegression():
         sample_nums, feature_nums = X.shape[0], X.shape[1] + 1
         Y = np.zeros((self.k, sample_nums))
         for i, label in enumerate(y):
-            Y[self.label_to_int[label], i] = 1
+            Y[self.label_to_index[label], i] = 1
         X = np.column_stack((np.ones(sample_nums), X))
         self.weight = np.zeros((self.k, feature_nums), dtype=float)
         for i in range(max_iter):
             batch_gradient = np.dot((Y - self.softmax(X)), X)  / sample_nums
             self.weight += (alpha * batch_gradient - reg * self.weight)
+        print('iter nums: %s' % str(i + 1))
+        print('loss: %s' % str(self.loss_func(X, Y, reg)))
         return self
 
     def fit_SGD(self, X, y, alpha=0.01, reg=0.1, max_iter=1000):
@@ -56,7 +55,7 @@ class SoftmaxRegression():
         sample_nums, feature_nums = X.shape[0], X.shape[1] + 1
         Y = np.zeros((self.k, sample_nums))
         for i, label in enumerate(y):
-            Y[self.label_to_int[label], i] = 1
+            Y[self.label_to_index[label], i] = 1
         X = np.column_stack((np.ones(sample_nums), X))
         self.weight = np.zeros((self.k, feature_nums), dtype=float)
         count = (max_iter * sample_nums)/ 10
@@ -76,16 +75,16 @@ class SoftmaxRegression():
         sample_nums, feature_nums = X.shape[0], X.shape[1] + 1
         Y = np.zeros((self.k, sample_nums))
         for i, label in enumerate(y):
-            Y[self.label_to_int[label], i] = 1
+            Y[self.label_to_index[label], i] = 1
         X = np.column_stack((np.ones(sample_nums), X))
         self.weight = np.zeros((self.k, feature_nums), dtype=float)
         for i in range(max_iter):
             matrix = np.exp(np.dot(self.weight, X.T))
             sum_matrix = np.sum(matrix, axis=0)
-            gradient = -np.dot((Y - self.softmax(X)), X)  / sample_nums
+            gradient = np.dot((Y - self.softmax(X)), X)  / sample_nums
             for j in range(self.k):
                 hessian = np.dot(X.T, np.dot((sum_matrix - matrix[j]) / (sum_matrix * sum_matrix), matrix[j]) * X)
-                self.weight[j] -= np.dot(np.linalg.inv(hessian), gradient[j])
+                self.weight[j] += np.dot(np.linalg.inv(hessian), gradient[j])
         print('iter nums: %s' % str(i + 1))
         print('loss: %s' % str(self.loss_func(X, Y, reg)))
         return self
@@ -174,7 +173,7 @@ if __name__ == '__main__':
         test_data = words_extract('train_test_data/test')
         feature_words = get_feature_words(train_data, size=1000, stopwords_file="stopwords.txt")
         X_train, y_train, X_test, y_test = train_test_extract(train_data, test_data, feature_words)
-        print("数据集构造用时%ss." % str(time.time()-start_time))
+        print("数据集构造用时: %ss." % str(time.time()-start_time))
         np.savetxt("X_train.csv", X_train, fmt='%i')
         np.savetxt("X_test.csv", X_test, fmt='%s')
 
